@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./vue.js"></script>
+    <style>
+        #list-item{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        button{
+            text-decoration: none;
+            padding: 15px 32px;
+            display: inline-block;
+        }
+
+        input{
+            padding: 15px 32px
+        }
+    </style>
+</head>
+<body>
+    <div id="list-item">
+        <div id="input">
+            <input type="text" v-model="textInput"/>
+            <button v-on:click="addItem">Add new item</button>
+        </div>
+        <ol>
+            <li v-for="todo in todos">
+                {{ todo.text }} <a href="javascript:;" v-on:click="deleteItem(todo)"><u>Delete</u></a>
+            </li>
+        </ol>
+    </div>
+
+    <script>
+        const listItem = new Vue({
+            el: '#list-item',
+            data: {
+                todos: [
+
+                ],
+                textInput: ""
+            },
+            mounted(){
+                if(localStorage.todos){
+                    this.todos = JSON.parse(localStorage.todos)
+                }
+            },
+            watch: {
+                todos: function(){
+                    // save item
+                    localStorage.todos = JSON.stringify(this.todos)
+                }
+            },
+            methods: {
+                addItem: function(){
+                    if(this.textInput !== ""){
+                        this.todos.push({text: this.textInput})
+                        this.textInput = ""
+                    }
+                },
+                deleteItem: function(todo){
+                    this.todos.splice(this.todos.indexOf(todo), 1)
+                }
+            },
+        });
+    </script>
+</body>
+</html>
